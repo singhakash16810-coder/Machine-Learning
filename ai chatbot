@@ -1,0 +1,124 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMJqKxVsGVIxIB7F0i6wTQk",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/singhakash16810-coder/Machine-Learning/blob/main/ai%20chatbot\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "89gZWD57UDDl",
+        "outputId": "3605ec75-e140-460e-c29d-0431df5d5436"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "You: what is a tiger\n",
+            "AI: A **tiger** (*Panthera tigris*) is the largest living cat species in the world. They are apex predators, meaning they sit at the top of the food chain, and are iconic symbols of power, strength, and wilderness.\n",
+            "\n",
+            "Here is a breakdown of what makes a tiger a tiger:\n",
+            "\n",
+            "### 1. Physical Characteristics\n",
+            "*   **Size:** Tigers are massive. A large male Siberian tiger can weigh up to 660 pounds (300 kg) and reach lengths of 10 feet (3 meters) or more.\n",
+            "*   **Stripes:** Every tiger has a unique pattern of dark vertical stripes on orange-brown fur. Interestingly, these stripes are not just on their fur—if you were to shave a tiger, the pattern would still be visible on its skin. No two tigers have the exact same stripe pattern (much like human fingerprints).\n",
+            "*   **Build:** They have incredibly muscular bodies, powerful jaws, and long, sharp teeth designed for hunting large prey.\n",
+            "\n",
+            "### 2. Habitat and Range\n",
+            "*   Tigers are native to **Asia**.\n",
+            "*   They are highly adaptable and live in a wide variety of environments, ranging from the freezing birch forests of Siberia to the tropical mangrove swamps of the Sundarbans in India and Bangladesh, and the grasslands of Southeast Asia.\n",
+            "\n",
+            "### 3. Behavior\n",
+            "*   **Solitary:** Unlike lions, which live in prides, tigers are solitary animals. Each tiger maintains a large territory that they mark with scent (urine) and scratch marks on trees.\n",
+            "*   **Ambush Predators:** Tigers are \"stalk-and-ambush\" hunters. They use their camouflage to creep very close to their prey before launching a sudden, explosive attack.\n",
+            "*   **Water Lovers:** Unlike most domestic cats, tigers love the water. They are excellent swimmers and are often found bathing in lakes or rivers to cool off or hunt.\n",
+            "\n",
+            "### 4. Diet\n",
+            "*   Tigers are **obligate carnivores**. Their diet consists mainly of large ungulates (hoofed animals) like deer, wild boar, water buffalo, and gaur. When necessary, they will also hunt smaller animals like monkeys, birds, or even reptiles.\n",
+            "\n",
+            "### 5. Conservation Status\n",
+            "*   Sadly, tigers are an **endangered species**. \n",
+            "*   In the early 20th century, there were an estimated 100,000 tigers in the wild. Today, there are fewer than 5,000. \n",
+            "*   Their primary threats are **habitat loss** (deforestation), **poaching** (illegal hunting for their fur and body parts used in traditional medicine), and a decrease in the availability of prey.\n",
+            "\n",
+            "### Fun Fact\n",
+            "The tiger is the national animal of several countries, including **India, Bangladesh, Malaysia, and South Korea.**\n"
+          ]
+        }
+      ],
+      "source": [
+        "from google import genai\n",
+        "from google.colab import userdata\n",
+        "\n",
+        "API_KEY = userdata.get(\"GEMINI_API_KEY\")\n",
+        "\n",
+        "client = genai.Client(api_key=API_KEY)\n",
+        "\n",
+        "history = []\n",
+        "\n",
+        "while True:\n",
+        "    user_input = input(\"You: \")\n",
+        "\n",
+        "    if user_input.lower() == \"exit\":\n",
+        "        break\n",
+        "\n",
+        "    history.append({\n",
+        "        \"role\": \"user\",\n",
+        "        \"content\": user_input\n",
+        "    })\n",
+        "\n",
+        "    prompt = \"\"\n",
+        "\n",
+        "    for message in history:\n",
+        "        role = message[\"role\"]\n",
+        "        content = message[\"content\"]\n",
+        "\n",
+        "        prompt = prompt + role + \": \" + content + \"\\n\"\n",
+        "\n",
+        "    response = client.models.generate_content(\n",
+        "        model=\"gemini-3.1-flash-lite\",\n",
+        "        contents=prompt,\n",
+        "        config=genai.types.GenerateContentConfig(\n",
+        "            temperature=0.7,\n",
+        "            top_k=40,\n",
+        "            top_p=0.9\n",
+        "        )\n",
+        "    )\n",
+        "\n",
+        "    print(\"AI:\", response.text)\n",
+        "\n",
+        "    history.append({\n",
+        "        \"role\": \"assistant\",\n",
+        "        \"content\": response.text\n",
+        "    })"
+      ]
+    }
+  ]
+}
